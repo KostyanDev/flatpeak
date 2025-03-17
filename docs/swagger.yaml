@@ -1,0 +1,61 @@
+definitions:
+  app_internal_transport_converters.SlotResponse:
+    properties:
+      intensity:
+        type: integer
+      valid_from:
+        type: string
+      valid_to:
+        type: string
+    type: object
+  app_internal_transport_converters.SlotsResponse:
+    properties:
+      slots:
+        items:
+          $ref: '#/definitions/app_internal_transport_converters.SlotResponse'
+        type: array
+    type: object
+info:
+  contact: {}
+paths:
+  /slots:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves the best time slots with the lowest carbon intensity
+        for the given duration.
+      parameters:
+      - description: 'Duration in minutes (default: 30, max: 1440)'
+        in: query
+        name: duration
+        type: integer
+      - description: 'Whether to return a single continuous slot (default: false)'
+        in: query
+        name: continuous
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of optimal time slots
+          schema:
+            items:
+              $ref: '#/definitions/app_internal_transport_converters.SlotsResponse'
+            type: array
+        "400":
+          description: 'Bad Request: Invalid query parameters'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: 'Internal Server Error: Failed to retrieve carbon intensity
+            data'
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get Optimal Carbon Intensity Slots
+      tags:
+      - Carbon Intensity
+swagger: "2.0"

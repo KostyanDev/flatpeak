@@ -1,0 +1,93 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/slots": {
+            "get": {
+                "description": "Retrieves the best time slots with the lowest carbon intensity for the given duration.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Carbon Intensity"
+                ],
+                "summary": "Get Optimal Carbon Intensity Slots",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Duration in minutes (default: 30, max: 1440)",
+                        "name": "duration",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Whether to return a single continuous slot (default: false)",
+                        "name": "continuous",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of optimal time slots",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/app_internal_transport_converters.SlotsResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request: Invalid query parameters",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error: Failed to retrieve carbon intensity data",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "app_internal_transport_converters.SlotResponse": {
+            "type": "object",
+            "properties": {
+                "intensity": {
+                    "type": "integer"
+                },
+                "valid_from": {
+                    "type": "string"
+                },
+                "valid_to": {
+                    "type": "string"
+                }
+            }
+        },
+        "app_internal_transport_converters.SlotsResponse": {
+            "type": "object",
+            "properties": {
+                "slots": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/app_internal_transport_converters.SlotResponse"
+                    }
+                }
+            }
+        }
+    }
+}
